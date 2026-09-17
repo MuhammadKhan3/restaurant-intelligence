@@ -35,3 +35,12 @@ export type EntranceEvent = {
   occurred_at: string;
   received_at: string;
 };
+
+export type QueueEvent = {
+  id: number;
+  zone_id: string;
+  track_id: number;
+  event_type: "entry" | "exit";
+  occurred_at: string;
+  received_at: string;
+};

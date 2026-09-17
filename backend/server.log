@@ -1,0 +1,11 @@
+warning: `VIRTUAL_ENV=c:\Users\PC\Desktop\projects\GenAi\table-management\restaurant-intelligence\cv-service\.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+INFO:     Started server process [11524]
+INFO:     Waiting for application startup.
+2026-09-17 17:48:50,656 | INFO | app.main | Restaurant Intelligence - Backend
+2026-09-17 17:48:50,656 | INFO | app.main | Environment: development
+2026-09-17 17:48:50,656 | INFO | app.main | Application started
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 4000): [winerror 10048] only one usage of each socket address (protocol/network address/port) is normally permitted
+INFO:     Waiting for application shutdown.
+2026-09-17 17:48:50,656 | INFO | app.main | Application shutting down
+INFO:     Application shutdown complete.

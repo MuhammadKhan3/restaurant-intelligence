@@ -2,8 +2,18 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchCameraEvents, fetchEntranceEvents, fetchTableEvents } from "@/lib/api";
-import { deriveCameraStatuses, deriveCustomerCount, deriveTableStatuses } from "@/lib/status";
+import {
+  fetchCameraEvents,
+  fetchEntranceEvents,
+  fetchQueueEvents,
+  fetchTableEvents,
+} from "@/lib/api";
+import {
+  deriveCameraStatuses,
+  deriveCustomerCount,
+  deriveTableStatuses,
+  deriveWaitingCount,
+} from "@/lib/status";
 import type { CameraStatus, TableStatus } from "@/types/events";
 
 import { CameraStatusList } from "@/components/dashboard/CameraStatusList";
@@ -16,6 +26,7 @@ export function FloorView() {
   const [tables, setTables] = useState<TableStatus[]>([]);
   const [cameras, setCameras] = useState<CameraStatus[]>([]);
   const [customerCount, setCustomerCount] = useState(0);
+  const [waitingCount, setWaitingCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,15 +35,17 @@ export function FloorView() {
 
     async function poll() {
       try {
-        const [tableEvents, cameraEvents, entranceEvents] = await Promise.all([
+        const [tableEvents, cameraEvents, entranceEvents, queueEvents] = await Promise.all([
           fetchTableEvents(),
           fetchCameraEvents(),
           fetchEntranceEvents(),
+          fetchQueueEvents(),
         ]);
         if (cancelled) return;
         setTables(deriveTableStatuses(tableEvents));
         setCameras(deriveCameraStatuses(cameraEvents));
         setCustomerCount(deriveCustomerCount(entranceEvents));
+        setWaitingCount(deriveWaitingCount(queueEvents));
         setError(null);
       } catch (err) {
         if (cancelled) return;
@@ -52,8 +65,9 @@ export function FloorView() {
 
   return (
     <div className="flex flex-col gap-8 px-6 py-8">
-      <section>
+      <section className="flex flex-wrap gap-8">
         <CustomerCount count={customerCount} />
+        <CustomerCount count={waitingCount} label="customers waiting in queue" />
       </section>
 
       <section className="flex flex-col gap-3">

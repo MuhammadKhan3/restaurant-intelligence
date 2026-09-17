@@ -50,3 +50,40 @@ class EntranceEventResponse(EntranceEventCreate):
 
     id: int
     received_at: datetime
+
+
+class QueueEventCreate(BaseModel):
+    """A queue join/leave event reported by cv-service."""
+
+    zone_id: str
+    track_id: int
+    event_type: str
+    occurred_at: datetime
+
+
+class QueueEventResponse(QueueEventCreate):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    received_at: datetime
+
+
+class TableSessionCreate(BaseModel):
+    """A continuous anonymous dining session reported by cv-service.
+
+    `ended_at` is null for a still-active session; `peak_customer_count` is a
+    headcount only, never an identity.
+    """
+
+    zone_id: str
+    started_at: datetime
+    ended_at: datetime | None = None
+    peak_customer_count: int
+    status: str
+
+
+class TableSessionResponse(TableSessionCreate):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    received_at: datetime

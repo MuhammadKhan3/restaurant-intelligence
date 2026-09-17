@@ -9,7 +9,8 @@ from fastapi import FastAPI
 
 from app.config import Settings, get_settings
 from app.detection.factory import create_person_detector
-from app.routes import detection_router, health_router
+from app.routes import detection_router, health_router, table_zones_router
+from app.tables.store import TableZoneStore
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     app.state.settings = settings
     app.state.person_detector = create_person_detector(settings)
 
+    table_zone_store = TableZoneStore()
+    table_zone_store.load(settings.table_zones_file)
+    app.state.table_zone_store = table_zone_store
+
     logger.info("Restaurant Intelligence")
     logger.info("Environment: %s", settings.app_env)
     logger.info("Application started")
@@ -42,6 +47,7 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Restaurant Intelligence - CV Service", lifespan=lifespan)
     app.include_router(health_router)
     app.include_router(detection_router)
+    app.include_router(table_zones_router)
     return app
 
 

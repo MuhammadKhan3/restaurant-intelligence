@@ -3,8 +3,12 @@ from app.schemas.event import (
     CameraEventResponse,
     EntranceEventCreate,
     EntranceEventResponse,
+    QueueEventCreate,
+    QueueEventResponse,
     TableEventCreate,
     TableEventResponse,
+    TableSessionCreate,
+    TableSessionResponse,
 )
 
 __all__ = [
@@ -12,6 +16,10 @@ __all__ = [
     "CameraEventResponse",
     "EntranceEventCreate",
     "EntranceEventResponse",
+    "QueueEventCreate",
+    "QueueEventResponse",
     "TableEventCreate",
     "TableEventResponse",
+    "TableSessionCreate",
+    "TableSessionResponse",
 ]

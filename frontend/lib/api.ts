@@ -1,4 +1,4 @@
-import type { CameraEvent, EntranceEvent, TableEvent } from "@/types/events";
+import type { CameraEvent, EntranceEvent, QueueEvent, TableEvent } from "@/types/events";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -20,4 +20,8 @@ export function fetchCameraEvents(limit = 500): Promise<CameraEvent[]> {
 
 export function fetchEntranceEvents(limit = 500): Promise<EntranceEvent[]> {
   return getJson<EntranceEvent[]>(`/events/entrance?limit=${limit}`);
+}
+
+export function fetchQueueEvents(limit = 500): Promise<QueueEvent[]> {
+  return getJson<QueueEvent[]>(`/events/queue?limit=${limit}`);
 }

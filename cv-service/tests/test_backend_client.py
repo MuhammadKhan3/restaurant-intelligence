@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import httpx
 
 from app.entrance.tracker import EntranceEvent, EntranceEventType
+from app.queue.tracker import QueueEvent, QueueEventType
 from app.services.backend_client import BackendEventForwarder
 from app.tables.state import StateChange, TableState
 
@@ -85,6 +86,33 @@ def test_send_entrance_event_posts_expected_payload() -> None:
     assert json.loads(requests[0].content) == {
         "zone_id": "main",
         "track_id": 7,
+        "event_type": "entry",
+        "occurred_at": "2024-01-01T00:00:00+00:00",
+    }
+
+
+def test_send_queue_event_posts_expected_payload() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(201, json={})
+
+    forwarder = _forwarder(handler)
+    event = QueueEvent(
+        zone_id="queue1",
+        track_id=3,
+        event_type=QueueEventType.ENTRY,
+        timestamp=datetime(2024, 1, 1, tzinfo=timezone.utc),
+    )
+
+    forwarder.send_queue_event(event)
+
+    assert len(requests) == 1
+    assert requests[0].url.path == "/events/queue"
+    assert json.loads(requests[0].content) == {
+        "zone_id": "queue1",
+        "track_id": 3,
         "event_type": "entry",
         "occurred_at": "2024-01-01T00:00:00+00:00",
     }

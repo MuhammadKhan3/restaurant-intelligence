@@ -1,3 +1,15 @@
-from app.models.event import CameraEvent, EntranceEvent, TableEvent
+from app.models.event import (
+    CameraEvent,
+    EntranceEvent,
+    QueueEvent,
+    TableEvent,
+    TableSessionRecord,
+)
 
-__all__ = ["CameraEvent", "EntranceEvent", "TableEvent"]
+__all__ = [
+    "CameraEvent",
+    "EntranceEvent",
+    "QueueEvent",
+    "TableEvent",
+    "TableSessionRecord",
+]

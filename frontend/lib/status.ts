@@ -2,6 +2,7 @@ import type {
   CameraEvent,
   CameraStatus,
   EntranceEvent,
+  QueueEvent,
   TableEvent,
   TableStatus,
 } from "@/types/events";
@@ -65,11 +66,20 @@ export function deriveCameraStatuses(events: CameraEvent[]): CameraStatus[] {
     .sort((a, b) => a.cameraId.localeCompare(b.cameraId));
 }
 
-/** Current customer count: entries minus exits across all entrance zones, floored at zero. */
-export function deriveCustomerCount(events: EntranceEvent[]): number {
+function netEntries(events: { event_type: "entry" | "exit" }[]): number {
   const count = events.reduce(
     (total, event) => total + (event.event_type === "entry" ? 1 : -1),
     0,
   );
   return Math.max(0, count);
+}
+
+/** Current customer count: entries minus exits across all entrance zones, floored at zero. */
+export function deriveCustomerCount(events: EntranceEvent[]): number {
+  return netEntries(events);
+}
+
+/** Current waiting count: joins minus leaves across all queue zones, floored at zero. */
+export function deriveWaitingCount(events: QueueEvent[]): number {
+  return netEntries(events);
 }

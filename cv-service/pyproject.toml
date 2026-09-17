@@ -6,10 +6,12 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.141.1",
     "httpx>=0.28.1",
+    "lap>=0.5.12",
     "numpy>=2.4.6",
     "opencv-python-headless>=5.0.0.93",
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
     "ultralytics>=8.4.153",
     "uvicorn[standard]>=0.53.0",
 ]

@@ -16,7 +16,14 @@ def test_health_endpoint_reports_ok() -> None:
     assert response.json() == {"status": "ok"}
 
 
-def test_detections_endpoint_returns_503_when_source_unavailable() -> None:
+def test_detections_endpoint_returns_503_when_source_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Force an unreachable source rather than relying on the developer's local
+    # .env having no VIDEO_SOURCE configured -- otherwise this test silently
+    # depends on machine-specific state.
+    monkeypatch.setenv("VIDEO_SOURCE", "definitely-does-not-exist.mp4")
+
     with TestClient(app) as client:
         response = client.get("/detections")
 

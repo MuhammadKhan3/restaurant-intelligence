@@ -1,4 +1,4 @@
-"""Forwards CV-detected table/camera/entrance events to the backend event API."""
+"""Forwards CV-detected table/camera/entrance/queue events to the backend event API."""
 
 import logging
 from datetime import datetime
@@ -6,6 +6,7 @@ from datetime import datetime
 import httpx
 
 from app.entrance.tracker import EntranceEvent
+from app.queue.tracker import QueueEvent
 from app.tables.state import StateChange
 
 logger = logging.getLogger(__name__)
@@ -48,6 +49,17 @@ class BackendEventForwarder:
     def send_entrance_event(self, event: EntranceEvent) -> None:
         self._post(
             "/events/entrance",
+            {
+                "zone_id": event.zone_id,
+                "track_id": event.track_id,
+                "event_type": event.event_type.value,
+                "occurred_at": event.timestamp.isoformat(),
+            },
+        )
+
+    def send_queue_event(self, event: QueueEvent) -> None:
+        self._post(
+            "/events/queue",
             {
                 "zone_id": event.zone_id,
                 "track_id": event.track_id,
